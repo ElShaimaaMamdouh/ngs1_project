@@ -1,5 +1,14 @@
 #Aim: Practice data download to annotation and differential expression
 #1- Download data: 
+wget -c ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR879/SRR8797509/SRR8797509.sra
+#Download SRA toolkit and installing it
+wget -c https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.9.6/sratoolkit.2.9.6-ubuntu64.tar.gz
+tar -xvzf sratoolkit.2.9.6-ubuntu64.tar.gz
+sudo apt install sra-toolkit
+#Converting data file from SRA to FASTQ
+EXPORT PATH=$PATH:/path/to/sratoolkit/bin/
+fastq-dump - X 5000000 --split-files SRR8797509
+grep '@' SRR8797509.fastq | wc -l
 #2- Preparation of data --> construct 5 samples, each has 2 parts: 1M uniq reads, 1M random reads(shuffled)
 #3- Fastq quality controlfor sample 1 only using FASTQC and report the difference between S1_1 and S1_2
 #4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for S1_2
