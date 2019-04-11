@@ -13,16 +13,24 @@ sudo apt install sra-toolkit
 fastq-dump - X 5000000 --split-files SRR8797509.sra
 grep '@' SRR8797509.fastq | wc -l
 #Keep receiving a message that there is no such file directory SRR8797509.fastq
-#Mr. Abdelrahman noticed that there's an extra space before the X, removed it and ran this line alone again, but received another error
-#Mr. Abdelrahman again noticed that the sra-toolkit I'm working with is an old version
-#I changed the environment I'm working with now; from base to ngs1 and reinstalling sra-tools
+#There's an extra space before the X, removed it and ran this line alone again, but received another error
+#sra-toolkit I'm working with is an old version
+#Changed the environment; from base to ngs1 and reinstalled sra-tools
+#Tried running fastq-dump without the splitting, worked and converted the file from sra to fastq, only one file and not paired end
 
 #2- Preparation of data --> construct 5 samples, each has 2 parts: 1M uniq reads, 1M random reads(shuffled)
+#Downloaded the zipped files proposed for the unshuffled and shuffled reads
+
 #3- Fastq quality controlfor sample 1 only using FASTQC and report the difference between S1_1 and S1_2
+
 #4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for S1_2
+
 #5- Alignment of all samples using BWA and Hisat against human reference file
 # - Export statistical report for each sample
+
 #6- Assembly --> apply reference based transcriptome assembly using string tie --> 5 samples without shuffeling and 5 other samples
 #where shuffeling applied
+
 #7- Using GTF, compare generated annotation to reference annotation
+
 #8- Apply differential expression
