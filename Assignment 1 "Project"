@@ -20,10 +20,16 @@ grep '@' SRR8797509.fastq | wc -l
 
 #2- Preparation of data --> construct 5 samples, each has 2 parts: 1M uniq reads, 1M random reads(shuffled)
 #Downloaded the zipped files proposed for the unshuffled and shuffled reads
+#Tried unzipping the files, had a problem with disk space. Deleted alot of files and started the process again.
+gunzip SRR8797509_1.part_001.fastq.gz
+gunzip SRR8797509_2.part_001.fastq.gz
+tar -xf shuffled_SRR8797509_1.part_001.tar.xz
+tar -xf shuffled_SRR8797509_2.part_001.tar.xz
 
 #3- Fastq quality controlfor sample 1 only using FASTQC and report the difference between S1_1 and S1_2
+fastqc -t 1 -f fastq -noextract SRR8797509_1.part_001.fastq shuffled_SRR8797509_1.part_001.fastq
 
-#4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for S1_2
+#4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for Sx_2
 
 #5- Alignment of all samples using BWA and Hisat against human reference file
 # - Export statistical report for each sample
