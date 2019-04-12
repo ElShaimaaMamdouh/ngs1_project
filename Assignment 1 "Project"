@@ -30,6 +30,18 @@ tar -xf shuffled_SRR8797509_2.part_001.tar.xz
 fastqc -t 1 -f fastq -noextract SRR8797509_1.part_001.fastq shuffled_SRR8797509_1.part_001.fastq
 
 #4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for Sx_2
+mkdir ~/trimmed && cd ~/trimmed 
+f1="$HOME/SRR8797509_1.part_001.fastq"
+f2="$HOME/SRR8797509_2.part_001.fastq"
+newf1="$HOME/SRR8797509_1.part_001.pe.trim.fastq"
+newf2="$HOME/SRR8797509_2.part_001.pe.trim.fastq"
+newf1U="$HOME/SRR8797509_1.part_001.se.trim.fastq"
+newf2U="$HOME/SRR8797509_2.part_001.se.trim.fastq"
+
+adap="/home/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
+
+trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
+ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:15 MINLEN:36
 
 #5- Alignment of all samples using BWA and Hisat against human reference file
 # - Export statistical report for each sample
