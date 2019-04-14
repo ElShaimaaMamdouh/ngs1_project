@@ -10,7 +10,7 @@ tar -xvzf sratoolkit.2.9.6-ubuntu64.tar.gz
 sudo apt install sra-toolkit
 
 #Converting data file from SRA to FASTQ
-fastq-dump - X 5000000 --split-files SRR8797509.sra
+fastq-dump -X 5000000 --split-files SRR8797509.sra
 grep '@' SRR8797509.fastq | wc -l
 #Keep receiving a message that there is no such file directory SRR8797509.fastq
 #There's an extra space before the X, removed it and ran this line alone again, but received another error
