@@ -43,6 +43,28 @@ adap="/home/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
 trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
 ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:15 MINLEN:36
 
+#output:
+#Input Read Pairs: 5000000 Both Surviving: 4938665 (98.77%) Forward Only Surviving: 45675 (0.91%) Reverse Only Surviving: 12858 (0.26%) Dropped: 2802 (0.06%)
+#TrimmomaticPE: Completed successfully
+
+
+mkdir ~/shffld_trimmed && cd ~/shffld_trimmed 
+f1="$HOME/shuffled_SRR8797509_1.part_001.fastq"
+f2="$HOME/shuffled_SRR8797509_2.part_001.fastq"
+newf1="$HOME/shuffled_SRR8797509_1.part_001.pe.trim.fastq"
+newf2="$HOME/shuffled_SRR8797509_2.part_001.pe.trim.fastq"
+newf1U="$HOME/shuffled_SRR8797509_1.part_001.se.trim.fastq"
+newf2U="$HOME/shuffled_SRR8797509_2.part_001.se.trim.fastq"
+
+adap="/home/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
+
+trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
+ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:30 MINLEN:36
+
+#output:
+#Input Read Pairs: 5000000 Both Surviving: 4341153 (86.82%) Forward Only Surviving: 294530 (5.89%) Reverse Only Surviving: 185386 (3.71%) Dropped: 178931 (3.58%)
+#TrimmomaticPE: Completed successfully
+
 #5- Alignment of all samples using BWA and Hisat against human reference file
 # - Export statistical report for each sample
 
