@@ -62,9 +62,7 @@ mkdir -p ~/NGS_Assign/bwa_align/bwa_index && cd ~/ NGS_Assign/bwa_align/bwa_inde
 ln -s /home/elshaimaa/NGS_Assign/chr22.fa .
 bwa index -a bwtsw chr22.fa
 cd ~/NGS_Assign/bwa_align
-R1=”/home/elshaimaa/NGS_Assign/SRR8797509_1.part_001.pe.trim.fastq
-R2=”/home/elshaimaa/NGS_Assign/SRR8797509_2.part_001.pe.trim.fastq
+R1="/home/elshaimaa/NGS_Assign/SRR8797509_1.part_001.pe.trim.fastq"
+R2="/home/elshaimaa/NGS_Assign/SRR8797509_2.part_001.pe.trim.fastq"
 /usr/bin/time -v bwa mem bwa_index/chr22.fa $R1 $R2 >SRR8797509.sam
 
-#received this error:"bwa mem bwa_index/chr22.fa $R1 $R2 >SRR8797509.sam
-[E::bwa_idx_load_from_disk] fail to locate the index files"
