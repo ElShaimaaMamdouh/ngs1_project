@@ -68,6 +68,9 @@ ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:30 MINLEN:36
 #output:
 #Input Read Pairs: 5000000 Both Surviving: 4341153 (86.82%) Forward Only Surviving: 294530 (5.89%) Reverse Only Surviving: 185386 (3.71%) Dropped: 178931 (3.58%)
 #TrimmomaticPE: Completed successfully
+
+#VM crashed suddenly and didn't want to restart, lost all data files. Installed Linux instead of Windows and will start the code\
+#from the begining
 ################################################################
 
 #5- Alignment of all samples using BWA and Hisat against human reference file
