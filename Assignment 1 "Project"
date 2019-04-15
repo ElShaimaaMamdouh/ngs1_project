@@ -1,13 +1,82 @@
-#Aim:
-#Practice data download to annotation and differential expression
-#Project details:
-#1- Download data: https://www.ncbi.nlm.nih.gov/sra/?term=SRR8797509
+#Aim: Practice data download to annotation and differential expression
+
+#1- Download data: 
+wget -c ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR879/SRR8797509/SRR8797509.sra
+#It took me almost one day to download the 2GB data file due to intermitent internet connections
+
+#Download SRA toolkit and installing it
+wget -c https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.9.6/sratoolkit.2.9.6-ubuntu64.tar.gz
+tar -xvzf sratoolkit.2.9.6-ubuntu64.tar.gz
+sudo apt install sra-toolkit
+
+#Converting data file from SRA to FASTQ
+fastq-dump -X 5000000 --split-files SRR8797509.sra
+grep '@' SRR8797509.fastq | wc -l
+#Keep receiving a message that there is no such file directory SRR8797509.fastq
+#There's an extra space before the X, removed it and ran this line alone again, but received another error
+#sra-toolkit I'm working with is an old version
+#Changed the environment; from base to ngs1 and reinstalled sra-tools
+#Tried running fastq-dump without the splitting, worked and converted the file from sra to fastq, only one file and not paired end
+
 #2- Preparation of data --> construct 5 samples, each has 2 parts: 1M uniq reads, 1M random reads(shuffled)
+#Downloaded the zipped files proposed for the unshuffled and shuffled reads
+#Tried unzipping the files, had a problem with disk space. Deleted alot of files and started the process again.
+gunzip SRR8797509_1.part_001.fastq.gz
+gunzip SRR8797509_2.part_001.fastq.gz
+tar -xf shuffled_SRR8797509_1.part_001.tar.xz
+tar -xf shuffled_SRR8797509_2.part_001.tar.xz
+
+seqkit split2 -1 SRR8797509_1.part_001.fastq -2 SRR8797509_2.part_001.fastq -p 5 -s 1000000 -O out –f
+
+seqkit split2 -1 shuffled_SRR8797509_1.part_001.fastq -2 shuffled_SRR8797509_2.part_001.fastq -p 5 -s 1000000 -O out_shuffled –f
+
 #3- Fastq quality controlfor sample 1 only using FASTQC and report the difference between S1_1 and S1_2
-#4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for S1_2
+fastqc -t 1 -f fastq -noextract SRR8797509_1.part_001.fastq shuffled_SRR8797509_1.part_001.fastq
+
+#4- Trimming for all samples --> mild trimming sor Sx_1 and aggressive trimming for Sx_2
+mkdir ~/trimmed && cd ~/trimmed 
+f1="$HOME/SRR8797509_1.part_001.fastq"
+f2="$HOME/SRR8797509_2.part_001.fastq"
+newf1="$HOME/SRR8797509_1.part_001.pe.trim.fastq"
+newf2="$HOME/SRR8797509_2.part_001.pe.trim.fastq"
+newf1U="$HOME/SRR8797509_1.part_001.se.trim.fastq"
+newf2U="$HOME/SRR8797509_2.part_001.se.trim.fastq"
+
+adap="/home/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
+
+trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
+ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:15 MINLEN:36
+
+#output:
+#Input Read Pairs: 5000000 Both Surviving: 4938665 (98.77%) Forward Only Surviving: 45675 (0.91%) Reverse Only Surviving: 12858 (0.26%) Dropped: 2802 (0.06%)
+#TrimmomaticPE: Completed successfully
+
+
+mkdir ~/shffld_trimmed && cd ~/shffld_trimmed 
+f1="$HOME/shuffled_SRR8797509_1.part_001.fastq"
+f2="$HOME/shuffled_SRR8797509_2.part_001.fastq"
+newf1="$HOME/shuffled_SRR8797509_1.part_001.pe.trim.fastq"
+newf2="$HOME/shuffled_SRR8797509_2.part_001.pe.trim.fastq"
+newf1U="$HOME/shuffled_SRR8797509_1.part_001.se.trim.fastq"
+newf2U="$HOME/shuffled_SRR8797509_2.part_001.se.trim.fastq"
+
+adap="/home/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
+
+trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
+ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:30 MINLEN:36
+
+#output:
+#Input Read Pairs: 5000000 Both Surviving: 4341153 (86.82%) Forward Only Surviving: 294530 (5.89%) Reverse Only Surviving: 185386 (3.71%) Dropped: 178931 (3.58%)
+#TrimmomaticPE: Completed successfully
+################################################################
+
 #5- Alignment of all samples using BWA and Hisat against human reference file
+
 # - Export statistical report for each sample
+
 #6- Assembly --> apply reference based transcriptome assembly using string tie --> 5 samples without shuffeling and 5 other samples
 #where shuffeling applied
+
 #7- Using GTF, compare generated annotation to reference annotation
+
 #8- Apply differential expression
